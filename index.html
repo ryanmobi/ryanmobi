@@ -72,53 +72,6 @@ ga('send', 'pageview');
       <div class="outer">
         <section id="main">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/04/hello-world/" class="article-date">
-  <time datetime="2015-09-04T15:53:35.000Z" itemprop="datePublished">2015-09-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/04/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/09/04/hello-world/" data-id="cie5uol3e00057n50tyib8yxa" class="article-share-link">Share</a>
-      
-        <a href="http://codelog.me/2015/09/04/hello-world/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-2015-01-15-class-loading-in-as7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/05/17/2015-01-15-class-loading-in-as7/" class="article-date">
@@ -176,7 +129,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/" data-id="cie5uol3j00097n50ykz5h2af" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/" data-id="cie5v5ed600088r50dnle6pii" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -255,7 +208,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/05/17/2015-01-13-jboss-as7-module/" data-id="cie5uol3m000d7n50mrjg31ua" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/05/17/2015-01-13-jboss-as7-module/" data-id="cie5v5ed8000c8r502zkmjy99" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/05/17/2015-01-13-jboss-as7-module/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -302,17 +255,16 @@ ga('send', 'pageview');
 </code></pre><p>答案是：</p>
 <pre><code><span class="number">83</span>
 <span class="number">83</span>
-</code></pre><p>为什么？？</p>
-<p>当时也不解，后来在Java语言规范里面找到答案，请看<a href="http://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.10.1" title="Java 7 语言规范" target="_blank" rel="external">Java 7 语言规范</a>，规范里头明确规定：</p>
-<blockquote>
-<p>An octal numeral consists of an ASCII digit 0 followed by one or more of the ASCII digits 0 through 7 interspersed with underscores, and can represent a positive, zero, or negative integer.</p>
-</blockquote>
-<p>也就是说，以0开始的int类型，Java会将它转换成八进制表示，对于00123来说，代表的八进制值为：1×8×8+2×8+3 = 83。</p>
-
+</code></pre>
+        
+          <p class="article-more-link">
+            <a href="/2015/03/10/java-octal-int/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cie5uol3100007n50v1dfkn0b" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cie5v5ecm00008r50vvr4pchj" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/03/10/java-octal-int/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -383,7 +335,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/2015-01-20-string-intern/" data-id="cie5uol3h00067n505a5nyl89" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/20/2015-01-20-string-intern/" data-id="cie5v5ed200058r503nh4tzpm" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/20/2015-01-20-string-intern/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -436,7 +388,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
