@@ -5,19 +5,16 @@
   
   <title>Jboss AS7 类加载机制 | Code Log</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍
-隐式模块依赖当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经">
+  <meta name="description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jboss AS7 类加载机制">
-<meta property="og:url" content="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/index.html">
+<meta property="og:url" content="http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/index.html">
 <meta property="og:site_name" content="Code Log">
-<meta property="og:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍
-隐式模块依赖当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经">
-<meta property="og:updated_time" content="2015-01-20T03:12:28.000Z">
+<meta property="og:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
+<meta property="og:updated_time" content="2015-09-04T16:37:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jboss AS7 类加载机制">
-<meta name="twitter:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍
-隐式模块依赖当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经">
+<meta name="twitter:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
   
     <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
   
@@ -76,8 +73,8 @@ ga('send', 'pageview');
       <div class="outer">
         <section id="main"><article id="post-2015-01-15-class-loading-in-as7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/05/17/2015-01-15-class-loading-in-as7/" class="article-date">
-  <time datetime="2015-05-17T14:40:50.000Z" itemprop="datePublished">2015-05-17</time>
+    <a href="/2015/09/05/2015-01-15-class-loading-in-as7/" class="article-date">
+  <time datetime="2015-09-04T16:37:56.000Z" itemprop="datePublished">2015-09-05</time>
 </a>
     
   <div class="article-category">
@@ -101,6 +98,7 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章<a href="http://m.com" title="Jboss模块介绍" target="_blank" rel="external">Jboss模块介绍</a></p>
+<a id="more"></a>
 <h1 id="隐式模块依赖">隐式模块依赖</h1><p>当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经预先被制作成Module并且默认包含在容器里头作为JBoss AS的一部分，那么这些Jar的模块将会被自动加载。</p>
 <p>那么隐式模块依赖是什么时候被加载的呢？当一个应用部署到容器里头，会经过一条叫做“deployment processors”的链。这条链上的每个processor都有方法去检测这个应用是否需要隐式加载一些模块，如果是，就将相关的依赖加载进来。</p>
 <p>检测手段可以有多种，譬如Annotation。如果一个类添加了@Stateless声明，那么容器就知道，这是一个EJB的类。</p>
@@ -131,9 +129,9 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/" data-id="cie5v5ed600088r50dnle6pii" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/" data-id="cie5v8kpu00089b50o6956r2p" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jboss/">Jboss</a></li></ul>
@@ -145,7 +143,7 @@ ga('send', 'pageview');
 <nav id="article-nav">
   
   
-    <a href="/2015/05/17/2015-01-13-jboss-as7-module/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/09/05/2015-01-13-jboss-as7-module/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Jboss AS7 模块介绍</div>
     </a>
@@ -199,7 +197,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -225,7 +223,7 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'codelog-me';
   
-  var disqus_url = 'http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/';
+  var disqus_url = 'http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/';
   
   (function(){
     var dsq = document.createElement('script');

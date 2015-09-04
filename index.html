@@ -74,8 +74,8 @@ ga('send', 'pageview');
   
     <article id="post-2015-01-15-class-loading-in-as7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/05/17/2015-01-15-class-loading-in-as7/" class="article-date">
-  <time datetime="2015-05-17T14:40:50.000Z" itemprop="datePublished">2015-05-17</time>
+    <a href="/2015/09/05/2015-01-15-class-loading-in-as7/" class="article-date">
+  <time datetime="2015-09-04T16:37:56.000Z" itemprop="datePublished">2015-09-05</time>
 </a>
     
   <div class="article-category">
@@ -90,7 +90,7 @@ ga('send', 'pageview');
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/17/2015-01-15-class-loading-in-as7/">Jboss AS7 类加载机制</a>
+      <a class="article-title" href="/2015/09/05/2015-01-15-class-loading-in-as7/">Jboss AS7 类加载机制</a>
     </h1>
   
 
@@ -98,40 +98,18 @@ ga('send', 'pageview');
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章<a href="http://m.com" title="Jboss模块介绍" target="_blank" rel="external">Jboss模块介绍</a></p>
-<h1 id="隐式模块依赖">隐式模块依赖</h1><p>当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经预先被制作成Module并且默认包含在容器里头作为JBoss AS的一部分，那么这些Jar的模块将会被自动加载。</p>
-<p>那么隐式模块依赖是什么时候被加载的呢？当一个应用部署到容器里头，会经过一条叫做“deployment processors”的链。这条链上的每个processor都有方法去检测这个应用是否需要隐式加载一些模块，如果是，就将相关的依赖加载进来。</p>
-<p>检测手段可以有多种，譬如Annotation。如果一个类添加了@Stateless声明，那么容器就知道，这是一个EJB的类。</p>
-<p>Jboss AS7隐式加载的模块列表看这里：<a href="https://docs.jboss.org/author/display/AS7/Implicit+module+dependencies+for+deployments" title="隐式加载的模块" target="_blank" rel="external">隐式加载的模块</a></p>
-<p>#类加载的优先级<br>类加载的先后顺序是为了避免类冲突，以下顺序按优先级从高到低排列：</p>
-<ol>
-<li>系统依赖 - 就是上面说的隐式依赖。</li>
-<li>用户依赖 - jboss-deployment-structure.xml里头定义的依赖；Manifest文件里通过Dependencies定义的依赖；Class-Path定义的依赖都属于用户依赖。</li>
-<li>本地资源 - 就是打包在应用里头的类，包括WEB-INF/classes底下的类文件，WEB-INF/lib底下的Jar包</li>
-<li>内部部署依赖 - 一个部署依赖于另一个部署；譬如一个EAR依赖另一个应用部署，EAR包lib底下的类等。</li>
-</ol>
-<p>#WAR包的类加载<br>一个WAR包作为一个单独的module，因此一个WAR包对应一个单独的class loader。</p>
-<p>#EAR包的类加载<br>EAR被看作为多module的部署。一般来说，EAR/lib这个文件夹会作为一个module，每一个WAR 或者EJB Jar包作为一个独立的module看待。子模块（WARs和EJB-Jars）一般来说会依赖父模块（EAR/lib），因此子模块可以访问EAR/lib底下的Jar，但子模块之间就不一定可见。可以通过ear-subdeployments-isolated来设置可见性。</p>
-<pre><code><span class="tag">&lt;<span class="title">subsystem</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:domain:ee:1.0"</span> &gt;</span>            
-  <span class="tag">&lt;<span class="title">ear-subdeployments-isolated</span>&gt;</span>false<span class="tag">&lt;/<span class="title">ear-subdeployments-isolated</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">subsystem</span>&gt;</span>
-</code></pre><p>默认值是false的，因此一个子模块可以访问另一个子模块的类。</p>
-<p>譬如有下面的EAR包结构：</p>
-<pre><code>myapp.ear
- <span class="string">|</span>
- <span class="string">|--- web.war</span>
- <span class="string">|</span>
- <span class="string">|--- ejb1.jar</span>
- <span class="string">|</span>
- <span class="string">|--- ejb2.jar</span>
-</code></pre><p>如果ear-subdeployments-isolated设置为false，那么web.war就可以访问ejb1.jar或者ejb2.jar里面的类，同理，ejb1.jar 跟ejb2.jar也是相互可见的。但是这个参数对具有单独类加载器的子部署是不生效的，譬如说EAR中的WAR包，因为每个WAR包是一个字部署，拥有独立的类加载器，因此WAR包之间的类是不可见的。同理，EAR底下Jar包的类也不能访问WAR包里的类。</p>
-
+        <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章<a href="http://m.com" title="Jboss模块介绍">Jboss模块介绍</a></p>
+        
+          <p class="article-more-link">
+            <a href="/2015/09/05/2015-01-15-class-loading-in-as7/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/" data-id="cie5v5ed600088r50dnle6pii" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/" data-id="cie5v8kpu00089b50o6956r2p" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/05/17/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2015/09/05/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jboss/">Jboss</a></li></ul>
@@ -145,8 +123,8 @@ ga('send', 'pageview');
   
     <article id="post-2015-01-13-jboss-as7-module" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/05/17/2015-01-13-jboss-as7-module/" class="article-date">
-  <time datetime="2015-05-17T14:40:50.000Z" itemprop="datePublished">2015-05-17</time>
+    <a href="/2015/09/05/2015-01-13-jboss-as7-module/" class="article-date">
+  <time datetime="2015-09-04T16:37:34.000Z" itemprop="datePublished">2015-09-05</time>
 </a>
     
   <div class="article-category">
@@ -161,7 +139,7 @@ ga('send', 'pageview');
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/17/2015-01-13-jboss-as7-module/">Jboss AS7 模块介绍</a>
+      <a class="article-title" href="/2015/09/05/2015-01-13-jboss-as7-module/">Jboss AS7 模块介绍</a>
     </h1>
   
 
@@ -171,46 +149,17 @@ ga('send', 'pageview');
       
         <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计的。</p>
 <p>#什么是模块<br>模块是classes和resources的集合，每一个模块对应着一个classloader。模块之间可以存在依赖关系，如果一个模块里面的Jar包需要用到另一个模块Jar包里面的类，那么需要显式声明模块依赖，否则模块与模块之间是不可见的。同样，如果部署一个应用到JBoss AS7容器，应用需要依赖模块，也要显式声明模块依赖。</p>
-<p>如果要深入了解JBoss AS7模块加载的机制，可以看：<a href="http://jaxenter.com/inside-the-jboss-as-7modularity-107386.html" title="JBoss模块分析" target="_blank" rel="external">JBoss模块分析</a></p>
-<p>#模块的好处</p>
-<ol>
-<li>相同版本的Jar包不会被重复加载。</li>
-<li>避免Jar包的版本冲突问题。</li>
-<li>提供了更加高效的类加载机制。</li>
-</ol>
-<p>#JBoss AS7的模块<br>在JBoss AS7安装目录下面，有一个叫<strong>modules</strong>的文件夹，里面就内置了相当多的模块。</p>
-<p><img src="/img/2015-01-13-jboss-as7-module/jboss-module-structure.png"></p>
-<p>我们以org.apache.commons.beanutils这个模块为例，进入文件夹：<jboss 安装目录="">/modules/org/apache/commons/beanutils/main/ 可以看到下面的文件列表：</jboss></p>
-<pre><code>total <span class="number">232</span>
--rw-r--r--. <span class="number">1</span> root root <span class="number">232019</span> Jan  <span class="number">2</span>  <span class="number">2013</span> commons-beanutils-<span class="number">1.8</span><span class="number">.3</span>.jar
--rw-r--r--. <span class="number">1</span> root root   <span class="number">1540</span> Jan  <span class="number">2</span>  <span class="number">2013</span> module.xml
-</code></pre><p>其中module.xml为模块的描述文件, 里面的内容：</p>
-<pre><code><span class="tag">&lt;<span class="title">module</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:module:1.1"</span> <span class="attribute">name</span>=<span class="value">"org.apache.commons.beanutils"</span>&gt;</span>
-    <span class="tag">&lt;<span class="title">properties</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"jboss.api"</span> <span class="attribute">value</span>=<span class="value">"private"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">properties</span>&gt;</span>
-
-    <span class="tag">&lt;<span class="title">resources</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">resource-root</span> <span class="attribute">path</span>=<span class="value">"commons-beanutils-1.8.3.jar"</span>/&gt;</span>
-        <span class="comment">&lt;!-- Insert resources here --&gt;</span>
-    <span class="tag">&lt;/<span class="title">resources</span>&gt;</span>
-
-    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.apache.commons.logging"</span>/&gt;</span>
-        <span class="tag">&lt;<span class="title">module</span> <span class="attribute">name</span>=<span class="value">"org.apache.commons.collections"</span>/&gt;</span>
-    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
-<span class="tag">&lt;/<span class="title">module</span>&gt;</span>
-</code></pre><p><strong>name</strong>=”org.apache.commons.beanutils”这个是模块的名称，也是模块的唯一标识符，模块之间就是通过指定该名字来添加依赖。</p>
-<p><strong>resources</strong> 描述了模块包含了那些Jar文件</p>
-<p><strong>dependencies</strong>定义了该模块需要依赖的模块</p>
-<p>#怎样将Jar配置成JBoss的模块<br>如果需要将一个第三方的Jar配置成JBoss的模块，也很简单，先定义好module.xml文件，根据name在JBoss的modules下建立对应的目录结构，最后将module.xml 和Jar包放到建好的main目录里头，这个Jar就变成了JBoss的一个模块。具体步骤网上很多，这里就不赘述。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2015/09/05/2015-01-13-jboss-as7-module/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/05/17/2015-01-13-jboss-as7-module/" data-id="cie5v5ed8000c8r502zkmjy99" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/09/05/2015-01-13-jboss-as7-module/" data-id="cie5v8kpw000c9b50911btwef" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/05/17/2015-01-13-jboss-as7-module/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2015/09/05/2015-01-13-jboss-as7-module/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jboss/">Jboss</a></li></ul>
@@ -264,7 +213,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cie5v5ecm00008r50vvr4pchj" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cie5v8kpj00009b50c9o5e2g4" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/03/10/java-octal-int/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -305,37 +254,15 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
-<p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
-<p>#测试程序</p>
-<pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStringPoolWithLongString</span><span class="params">()</span></span>{
-        <span class="keyword">long</span> i=<span class="number">0</span>;
-        <span class="keyword">while</span>(<span class="literal">true</span>){
-            String longString = <span class="string">"This is a very long string, very very long string to test the gc behavior of the string constant pool"</span>+i;
-            longString.intern();
-            i++;
-        }
-    }
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{
-        StringPoolTest stringPoolTest = <span class="keyword">new</span> StringPoolTest();
-        stringPoolTest.testStringPoolWithLongString();
-    }
-}
-</code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
-<p>#Java 6<br>我们使用版本Jdk1.6.0_29来跑该程序，打开Java VisualVM监控，可以看到，Perm区不断发生GC，由此的出结论，虽然字符串常量池放在Perm空间，但当Perm空间接近满的时候，JVM会将字符串常量池中的无用字符串回收掉。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png"></p>
-<p>#Java 7<br>下面，我们切换到Jdk1.7.0_67重跑该程序，可以看到Perm区内存分配曲线很平滑，没有出现内存分配的现象。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png"></p>
-<p>但在Heap空间，新的对象不断产生，然后不断触发GC</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-heap.png"></p>
-<p>#结论<br>由于Perm区大小是有限的，通常只有几十MB，所以不推荐在Java6下广泛使用String.intern()，这篇文章<a href="http://java-performance.info/string-intern-in-java-6-7-8/" title="string-intern-in-java-6-7-8" target="_blank" rel="external">string-intern-in-java-6-7-8</a>的性能测试表明，在Java6底下大量使用intern()会导致应用性能的显著下降，还有可能产生OOM错误。但从Java7开始，字符串常量池被移到了Heap空间，Heap空间的大小只受制于机器的真实内存大小，因此，在Java7下使用String.intern()能更有效地减少重复String对象对内存的占用。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2015/01/20/2015-01-20-string-intern/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/2015-01-20-string-intern/" data-id="cie5v5ed200058r503nh4tzpm" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/20/2015-01-20-string-intern/" data-id="cie5v8kpr00059b50tb5k5mr7" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/20/2015-01-20-string-intern/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -388,7 +315,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
