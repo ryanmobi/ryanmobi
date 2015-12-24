@@ -8,10 +8,10 @@
   <meta name="description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jboss AS7 类加载机制">
-<meta property="og:url" content="http://codelog.me/2015/01/15/2015-01-15-class-loading-in-as7/index.html">
+<meta property="og:url" content="http://codelog.me/2015/01/15/class-loading-in-as7/index.html">
 <meta property="og:site_name" content="Code Log">
 <meta property="og:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
-<meta property="og:updated_time" content="2015-09-05T14:11:06.000Z">
+<meta property="og:updated_time" content="2015-12-04T15:29:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jboss AS7 类加载机制">
 <meta name="twitter:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章Jboss模块介绍">
@@ -71,9 +71,9 @@ ga('send', 'pageview');
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-2015-01-15-class-loading-in-as7" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-class-loading-in-as7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/01/15/2015-01-15-class-loading-in-as7/" class="article-date">
+    <a href="/2015/01/15/class-loading-in-as7/" class="article-date">
   <time datetime="2015-01-15T03:05:51.000Z" itemprop="datePublished">2015-01-15</time>
 </a>
     
@@ -103,15 +103,15 @@ ga('send', 'pageview');
 <p>那么隐式模块依赖是什么时候被加载的呢？当一个应用部署到容器里头，会经过一条叫做“deployment processors”的链。这条链上的每个processor都有方法去检测这个应用是否需要隐式加载一些模块，如果是，就将相关的依赖加载进来。</p>
 <p>检测手段可以有多种，譬如Annotation。如果一个类添加了@Stateless声明，那么容器就知道，这是一个EJB的类。</p>
 <p>Jboss AS7隐式加载的模块列表看这里：<a href="https://docs.jboss.org/author/display/AS7/Implicit+module+dependencies+for+deployments" title="隐式加载的模块" target="_blank" rel="external">隐式加载的模块</a></p>
-<p>#类加载的优先级<br>类加载的先后顺序是为了避免类冲突，以下顺序按优先级从高到低排列：</p>
+<h1 id="类加载的优先级">类加载的优先级</h1><p>类加载的先后顺序是为了避免类冲突，以下顺序按优先级从高到低排列：</p>
 <ol>
 <li>系统依赖 - 就是上面说的隐式依赖。</li>
 <li>用户依赖 - jboss-deployment-structure.xml里头定义的依赖；Manifest文件里通过Dependencies定义的依赖；Class-Path定义的依赖都属于用户依赖。</li>
 <li>本地资源 - 就是打包在应用里头的类，包括WEB-INF/classes底下的类文件，WEB-INF/lib底下的Jar包</li>
 <li>内部部署依赖 - 一个部署依赖于另一个部署；譬如一个EAR依赖另一个应用部署，EAR包lib底下的类等。</li>
 </ol>
-<p>#WAR包的类加载<br>一个WAR包作为一个单独的module，因此一个WAR包对应一个单独的class loader。</p>
-<p>#EAR包的类加载<br>EAR被看作为多module的部署。一般来说，EAR/lib这个文件夹会作为一个module，每一个WAR 或者EJB Jar包作为一个独立的module看待。子模块（WARs和EJB-Jars）一般来说会依赖父模块（EAR/lib），因此子模块可以访问EAR/lib底下的Jar，但子模块之间就不一定可见。可以通过ear-subdeployments-isolated来设置可见性。</p>
+<h1 id="WAR包的类加载">WAR包的类加载</h1><p>一个WAR包作为一个单独的module，因此一个WAR包对应一个单独的class loader。</p>
+<h1 id="EAR包的类加载">EAR包的类加载</h1><p>EAR被看作为多module的部署。一般来说，EAR/lib这个文件夹会作为一个module，每一个WAR 或者EJB Jar包作为一个独立的module看待。子模块（WARs和EJB-Jars）一般来说会依赖父模块（EAR/lib），因此子模块可以访问EAR/lib底下的Jar，但子模块之间就不一定可见。可以通过ear-subdeployments-isolated来设置可见性。</p>
 <pre><code><span class="tag">&lt;<span class="title">subsystem</span> <span class="attribute">xmlns</span>=<span class="value">"urn:jboss:domain:ee:1.0"</span> &gt;</span>            
   <span class="tag">&lt;<span class="title">ear-subdeployments-isolated</span>&gt;</span>false<span class="tag">&lt;/<span class="title">ear-subdeployments-isolated</span>&gt;</span>
 <span class="tag">&lt;/<span class="title">subsystem</span>&gt;</span>
@@ -129,9 +129,9 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/15/2015-01-15-class-loading-in-as7/" data-id="cie75fqaw0008ev50am6grpq5" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/15/class-loading-in-as7/" data-id="ciikbdtq7000dk9500idy5rkp" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/01/15/2015-01-15-class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2015/01/15/class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jboss/">Jboss</a></li></ul>
@@ -142,7 +142,7 @@ ga('send', 'pageview');
     
 <nav id="article-nav">
   
-    <a href="/2015/01/20/2015-01-20-string-intern/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/01/20/string-intern/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
@@ -152,7 +152,7 @@ ga('send', 'pageview');
     </a>
   
   
-    <a href="/2015/01/13/2015-01-13-jboss-as7-module/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/01/13/jboss-as7-module/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Jboss AS7 模块介绍</div>
     </a>
@@ -188,7 +188,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -197,7 +197,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jboss/" style="font-size: 10px;">Jboss</a>
+      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 15px;">Jboss</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
     </div>
   </div>
 
@@ -206,7 +206,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -232,7 +232,7 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'codelog-me';
   
-  var disqus_url = 'http://codelog.me/2015/01/15/2015-01-15-class-loading-in-as7/';
+  var disqus_url = 'http://codelog.me/2015/01/15/class-loading-in-as7/';
   
   (function(){
     var dsq = document.createElement('script');
