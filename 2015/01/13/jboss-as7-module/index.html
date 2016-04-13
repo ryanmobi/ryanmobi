@@ -14,7 +14,7 @@
 <meta property="og:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计的。
 #什么是模块模块是classes和resources的集合，每一个模块对应着一个classloader。模块之间可以存在依赖关系，如果一个模块里面的Jar包需要用到另一个模块Jar包里面的类，那么需要显式声明模块依赖，否则模块与模块之间是不可见的。同样，如果部署一个应用到JBoss AS7容器，应">
 <meta property="og:image" content="http://codelog.me/img/2015-01-13-jboss-as7-module/jboss-module-structure.png">
-<meta property="og:updated_time" content="2015-09-05T14:11:20.000Z">
+<meta property="og:updated_time" content="2016-04-13T15:43:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jboss AS7 模块介绍">
 <meta name="twitter:description" content="相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计的。
@@ -103,7 +103,6 @@ ga('send', 'pageview');
       
         <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计的。</p>
 <p>#什么是模块<br>模块是classes和resources的集合，每一个模块对应着一个classloader。模块之间可以存在依赖关系，如果一个模块里面的Jar包需要用到另一个模块Jar包里面的类，那么需要显式声明模块依赖，否则模块与模块之间是不可见的。同样，如果部署一个应用到JBoss AS7容器，应用需要依赖模块，也要显式声明模块依赖。</p>
-<a id="more"></a>
 <p>如果要深入了解JBoss AS7模块加载的机制，可以看：<a href="http://jaxenter.com/inside-the-jboss-as-7modularity-107386.html" title="JBoss模块分析" target="_blank" rel="external">JBoss模块分析</a></p>
 <p>#模块的好处</p>
 <ol>
@@ -111,6 +110,7 @@ ga('send', 'pageview');
 <li>避免Jar包的版本冲突问题。</li>
 <li>提供了更加高效的类加载机制。</li>
 </ol>
+<a id="more"></a>
 <p>#JBoss AS7的模块<br>在JBoss AS7安装目录下面，有一个叫<strong>modules</strong>的文件夹，里面就内置了相当多的模块。</p>
 <p><img src="/img/2015-01-13-jboss-as7-module/jboss-module-structure.png"></p>
 <p>我们以org.apache.commons.beanutils这个模块为例，进入文件夹：<jboss 安装目录="">/modules/org/apache/commons/beanutils/main/ 可以看到下面的文件列表：</jboss></p>
@@ -141,7 +141,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/13/jboss-as7-module/" data-id="cimz0x345000quq50cpg26tys" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/13/jboss-as7-module/" data-id="cimz12kue000qxx50p9vi9ryk" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/13/jboss-as7-module/#disqus_thread" class="article-comment-link">Comments</a>
       

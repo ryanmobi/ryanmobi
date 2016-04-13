@@ -108,7 +108,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2016/01/14/linux-package-management/" data-id="cimz0x3330000uq50lv4pnb8u" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2016/01/14/linux-package-management/" data-id="cimz12kta0000xx507kb18gf6" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2016/01/14/linux-package-management/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -181,7 +181,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/" data-id="cimz0x33g0005uq50qwv1s4jg" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/" data-id="cimz12ktk0005xx50job72mjm" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -228,7 +228,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/10/12/consistent-hash-ketama/" data-id="cimz0x33r0009uq50oznoxpay" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/10/12/consistent-hash-ketama/" data-id="cimz12ktn0009xx501apjwwxk" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/10/12/consistent-hash-ketama/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -274,7 +274,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/09/13/about-hashcode/" data-id="cimz0x33t000cuq502smc1vfm" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/09/13/about-hashcode/" data-id="cimz12ktp000cxx503mstqtbd" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/09/13/about-hashcode/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -330,7 +330,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cimz0x33v000fuq505wlqp5vh" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/03/10/java-octal-int/" data-id="cimz12kts000fxx502wwebj4s" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/03/10/java-octal-int/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -362,7 +362,7 @@ ga('send', 'pageview');
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/20/string-intern/">深入理解Java String#intern() 内存模型</a>
+      <a class="article-title" href="/2015/01/20/string-intern/">深入理解Java String.intern() 内存模型</a>
     </h1>
   
 
@@ -371,6 +371,25 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
+<p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
+<p>#测试程序</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStringPoolWithLongString</span><span class="params">()</span></span>{
+        <span class="keyword">long</span> i=<span class="number">0</span>;
+        <span class="keyword">while</span>(<span class="literal">true</span>){
+            String longString = <span class="string">"This is a very long string, very very long string to test the gc behavior of the string constant pool"</span>+i;
+            longString.intern();
+            i++;
+        }
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{
+        StringPoolTest stringPoolTest = <span class="keyword">new</span> StringPoolTest();
+        stringPoolTest.testStringPoolWithLongString();
+    }
+}
+</code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
         
           <p class="article-more-link">
             <a href="/2015/01/20/string-intern/#more">Read More</a>
@@ -379,7 +398,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz0x33z000juq50qodxwr83" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz12ktw000jxx505pkix5w9" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -420,6 +439,8 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计，关于JBoss模块的介绍，可以看上一篇文章<a href="http://m.com" title="Jboss模块介绍">Jboss模块介绍</a></p>
+<h1 id="隐式模块依赖">隐式模块依赖</h1><p>当你部署一个应用到Jboss容器的时候，有些依赖是隐式被加载的，例如如果部署一个Java EE的应用，包含EJBs，因为EJBs需要用到Javax.ejb.* 的包和其他一些Java EE API 相关包，包含这些包的Jar已经预先被制作成Module并且默认包含在容器里头作为JBoss AS的一部分，那么这些Jar的模块将会被自动加载。</p>
+<p>那么隐式模块依赖是什么时候被加载的呢？当一个应用部署到容器里头，会经过一条叫做“deployment processors”的链。这条链上的每个processor都有方法去检测这个应用是否需要隐式加载一些模块，如果是，就将相关的依赖加载进来。</p>
         
           <p class="article-more-link">
             <a href="/2015/01/15/class-loading-in-as7/#more">Read More</a>
@@ -428,7 +449,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/15/class-loading-in-as7/" data-id="cimz0x342000muq50wsic6bur" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/15/class-loading-in-as7/" data-id="cimz12ku1000mxx50yzu6w2gb" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/15/class-loading-in-as7/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -470,6 +491,13 @@ ga('send', 'pageview');
       
         <p> 相对于Jboss之前的版本，AS7的类加载机制完全不同，AS7的类加载是基于JBoss模块来设计的。</p>
 <p>#什么是模块<br>模块是classes和resources的集合，每一个模块对应着一个classloader。模块之间可以存在依赖关系，如果一个模块里面的Jar包需要用到另一个模块Jar包里面的类，那么需要显式声明模块依赖，否则模块与模块之间是不可见的。同样，如果部署一个应用到JBoss AS7容器，应用需要依赖模块，也要显式声明模块依赖。</p>
+<p>如果要深入了解JBoss AS7模块加载的机制，可以看：<a href="http://jaxenter.com/inside-the-jboss-as-7modularity-107386.html" title="JBoss模块分析">JBoss模块分析</a></p>
+<p>#模块的好处</p>
+<ol>
+<li>相同版本的Jar包不会被重复加载。</li>
+<li>避免Jar包的版本冲突问题。</li>
+<li>提供了更加高效的类加载机制。</li>
+</ol>
         
           <p class="article-more-link">
             <a href="/2015/01/13/jboss-as7-module/#more">Read More</a>
@@ -478,7 +506,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/13/jboss-as7-module/" data-id="cimz0x345000quq50cpg26tys" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/13/jboss-as7-module/" data-id="cimz12kue000qxx50p9vi9ryk" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/13/jboss-as7-module/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -532,7 +560,7 @@ sed <span class="string">'2~2d'</span> abc.txt
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2014/01/23/sed-command-quick-reference/" data-id="cimz0x347000tuq502qyvouj6" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2014/01/23/sed-command-quick-reference/" data-id="cimz12kuh000txx50lgkp5kxx" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2014/01/23/sed-command-quick-reference/#disqus_thread" class="article-comment-link">Comments</a>
       

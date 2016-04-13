@@ -3,21 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>深入理解Java String#intern() 内存模型 | Code Log</title>
+  <title>深入理解Java String.intern() 内存模型 | Code Log</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+  <meta name="description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解Java String#intern() 内存模型">
+<meta property="og:title" content="深入理解Java String.intern() 内存模型">
 <meta property="og:url" content="http://codelog.me/2015/01/20/string-intern/index.html">
 <meta property="og:site_name" content="Code Log">
-<meta property="og:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+<meta property="og:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png">
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png">
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-heap.png">
-<meta property="og:updated_time" content="2015-12-02T15:07:25.000Z">
+<meta property="og:updated_time" content="2016-04-13T15:44:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解Java String#intern() 内存模型">
-<meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+<meta name="twitter:title" content="深入理解Java String.intern() 内存模型">
+<meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
   
     <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
   
@@ -92,7 +95,7 @@ ga('send', 'pageview');
         
   
     <h1 class="article-title" itemprop="name">
-      深入理解Java String#intern() 内存模型
+      深入理解Java String.intern() 内存模型
     </h1>
   
 
@@ -101,7 +104,6 @@ ga('send', 'pageview');
     <div class="article-entry" itemprop="articleBody">
       
         <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
-<a id="more"></a>
 <p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
 <p>#测试程序</p>
 <pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
@@ -121,6 +123,7 @@ ga('send', 'pageview');
     }
 }
 </code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
+<a id="more"></a>
 <p>#Java 6<br>我们使用版本Jdk1.6.0_29来跑该程序，打开Java VisualVM监控，可以看到，Perm区不断发生GC，由此的出结论，虽然字符串常量池放在Perm空间，但当Perm空间接近满的时候，JVM会将字符串常量池中的无用字符串回收掉。</p>
 <p><img src="/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png"></p>
 <p>#Java 7<br>下面，我们切换到Jdk1.7.0_67重跑该程序，可以看到Perm区内存分配曲线很平滑，没有出现内存分配的现象。</p>
@@ -132,7 +135,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz0x33z000juq50qodxwr83" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz12ktw000jxx505pkix5w9" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
       
