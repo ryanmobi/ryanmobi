@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>深入理解Java String#intern() 内存模型 | Code Log</title>
+  <title>deb包安装目录详解 | Code Log</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+  <meta name="description" content="大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，究竟软件包的文件被保存到在里？
+其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解Java String#intern() 内存模型">
-<meta property="og:url" content="http://codelog.me/2015/01/20/string-intern/index.html">
+<meta property="og:title" content="deb包安装目录详解">
+<meta property="og:url" content="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/index.html">
 <meta property="og:site_name" content="Code Log">
-<meta property="og:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-heap.png">
-<meta property="og:updated_time" content="2015-12-02T15:07:25.000Z">
+<meta property="og:description" content="大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，究竟软件包的文件被保存到在里？
+其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所">
+<meta property="og:updated_time" content="2016-04-13T15:34:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解Java String#intern() 内存模型">
-<meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+<meta name="twitter:title" content="deb包安装目录详解">
+<meta name="twitter:description" content="大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，究竟软件包的文件被保存到在里？
+其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所">
   
     <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
   
@@ -74,14 +74,14 @@ ga('send', 'pageview');
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-string-intern" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-where-the-package-installed-in-linux" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/01/20/string-intern/" class="article-date">
-  <time datetime="2015-01-20T06:05:51.000Z" itemprop="datePublished">2015-01-20</time>
+    <a href="/2016/01/13/where-the-package-installed-in-linux/" class="article-date">
+  <time datetime="2016-01-12T16:13:58.000Z" itemprop="datePublished">2016-01-13</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Development/">Development</a>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
   </div>
 
   </div>
@@ -92,7 +92,7 @@ ga('send', 'pageview');
         
   
     <h1 class="article-title" itemprop="name">
-      深入理解Java String#intern() 内存模型
+      deb包安装目录详解
     </h1>
   
 
@@ -100,44 +100,45 @@ ga('send', 'pageview');
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
-<a id="more"></a>
-<p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
-<p>#测试程序</p>
-<pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStringPoolWithLongString</span><span class="params">()</span></span>{
-        <span class="keyword">long</span> i=<span class="number">0</span>;
-        <span class="keyword">while</span>(<span class="literal">true</span>){
-            String longString = <span class="string">"This is a very long string, very very long string to test the gc behavior of the string constant pool"</span>+i;
-            longString.intern();
-            i++;
-        }
-    }
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{
-        StringPoolTest stringPoolTest = <span class="keyword">new</span> StringPoolTest();
-        stringPoolTest.testStringPoolWithLongString();
-    }
-}
-</code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
-<p>#Java 6<br>我们使用版本Jdk1.6.0_29来跑该程序，打开Java VisualVM监控，可以看到，Perm区不断发生GC，由此的出结论，虽然字符串常量池放在Perm空间，但当Perm空间接近满的时候，JVM会将字符串常量池中的无用字符串回收掉。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png"></p>
-<p>#Java 7<br>下面，我们切换到Jdk1.7.0_67重跑该程序，可以看到Perm区内存分配曲线很平滑，没有出现内存分配的现象。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png"></p>
-<p>但在Heap空间，新的对象不断产生，然后不断触发GC</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-heap.png"></p>
-<p>#结论<br>由于Perm区大小是有限的，通常只有几十MB，所以不推荐在Java6下广泛使用String.intern()，这篇文章<a href="http://java-performance.info/string-intern-in-java-6-7-8/" title="string-intern-in-java-6-7-8" target="_blank" rel="external">string-intern-in-java-6-7-8</a>的性能测试表明，在Java6底下大量使用intern()会导致应用性能的显著下降，还有可能产生OOM错误。但从Java7开始，字符串常量池被移到了Heap空间，Heap空间的大小只受制于机器的真实内存大小，因此，在Java7下使用String.intern()能更有效地减少重复String对象对内存的占用。</p>
+        <p>大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，<strong>究竟软件包的文件被保存到在里？</strong></p>
+<p>其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所有文件的分布情况：</p>
+<pre><code><span class="preprocessor"># dpkg -L nodejs</span>
+</code></pre><p>输出如下：</p>
+<pre><code>/.
+/usr
+<span class="regexp">/usr/</span>share
+<span class="regexp">/usr/</span>share/doc
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs/changelog.Debian.gz
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs/api
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>assets
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>assets/style.css
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>assets/sh.css
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>https.markdown.gz
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>events.markdown
+<span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>punycode.markdown
+...略
+</code></pre><p>可以看到nodejs的文件大致可以分为以下几大类：</p>
+<ol>
+<li><p>/usr/share/doc/nodejs/<br>保存nodejs相关的文档</p>
+</li>
+<li><p>/usr/share/man/man1/nodejs.1.gz<br>保存man命令与nodejs相关的帮助手册</p>
+</li>
+<li><p>/usr/lib/nodejs/<br>保存nodejs相关的库文件</p>
+</li>
+<li><p>/usr/bin/nodejs<br>nodejs的可执行程序</p>
+</li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz0qa0j000jqk50nedvd3qt" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/" data-id="cimz0qa060005qk50kwj17wit" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/01/20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
 
     </footer>
   </div>
@@ -145,19 +146,19 @@ ga('send', 'pageview');
     
 <nav id="article-nav">
   
-    <a href="/2015/03/10/java-octal-int/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/01/14/linux-package-management/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Java 中以0开头的int变量的真实值
+          Linux包管理扫盲帖
         
       </div>
     </a>
   
   
-    <a href="/2015/01/15/class-loading-in-as7/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/10/12/consistent-hash-ketama/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Jboss AS7 类加载机制</div>
+      <div class="article-nav-title">一致性哈希算法之Ketama算法</div>
     </a>
   
 </nav>
@@ -235,7 +236,7 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'codelog-me';
   
-  var disqus_url = 'http://codelog.me/2015/01/20/string-intern/';
+  var disqus_url = 'http://codelog.me/2016/01/13/where-the-package-installed-in-linux/';
   
   (function(){
     var dsq = document.createElement('script');

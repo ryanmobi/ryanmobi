@@ -3,21 +3,42 @@
 <head>
   <meta charset="utf-8">
   
-  <title>深入理解Java String#intern() 内存模型 | Code Log</title>
+  <title>sed快速入门 | Code Log</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+  <meta name="description" content="sed与awk堪称文本流处理神器，本文提供了sed命令的快速入门参考：
+删除命令删除第N行sed 3d abc.txt
+该命令会删除第三行数据
+隔行删除sed &apos;1~2d&apos; abc.txt
+sed &apos;2~2d&apos; abc.txt
+第一个命令会删除奇数行数据，第二个命令会删除偶数行数据。
+删除从N行开始到M行的数据sed &apos;5,11d&apos; abc.txt
+删除第五行到第十一行的数据。
+删除最后一行数据s">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解Java String#intern() 内存模型">
-<meta property="og:url" content="http://codelog.me/2015/01/20/string-intern/index.html">
+<meta property="og:title" content="sed快速入门">
+<meta property="og:url" content="http://codelog.me/2014/01/23/sed-command-quick-reference/index.html">
 <meta property="og:site_name" content="Code Log">
-<meta property="og:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png">
-<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-heap.png">
-<meta property="og:updated_time" content="2015-12-02T15:07:25.000Z">
+<meta property="og:description" content="sed与awk堪称文本流处理神器，本文提供了sed命令的快速入门参考：
+删除命令删除第N行sed 3d abc.txt
+该命令会删除第三行数据
+隔行删除sed &apos;1~2d&apos; abc.txt
+sed &apos;2~2d&apos; abc.txt
+第一个命令会删除奇数行数据，第二个命令会删除偶数行数据。
+删除从N行开始到M行的数据sed &apos;5,11d&apos; abc.txt
+删除第五行到第十一行的数据。
+删除最后一行数据s">
+<meta property="og:updated_time" content="2016-01-31T15:58:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解Java String#intern() 内存模型">
-<meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。">
+<meta name="twitter:title" content="sed快速入门">
+<meta name="twitter:description" content="sed与awk堪称文本流处理神器，本文提供了sed命令的快速入门参考：
+删除命令删除第N行sed 3d abc.txt
+该命令会删除第三行数据
+隔行删除sed &apos;1~2d&apos; abc.txt
+sed &apos;2~2d&apos; abc.txt
+第一个命令会删除奇数行数据，第二个命令会删除偶数行数据。
+删除从N行开始到M行的数据sed &apos;5,11d&apos; abc.txt
+删除第五行到第十一行的数据。
+删除最后一行数据s">
   
     <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
   
@@ -74,14 +95,14 @@ ga('send', 'pageview');
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-string-intern" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-sed-command-quick-reference" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/01/20/string-intern/" class="article-date">
-  <time datetime="2015-01-20T06:05:51.000Z" itemprop="datePublished">2015-01-20</time>
+    <a href="/2014/01/23/sed-command-quick-reference/" class="article-date">
+  <time datetime="2014-01-23T15:53:51.000Z" itemprop="datePublished">2014-01-23</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Development/">Development</a>
+    <a class="article-category-link" href="/categories/sed/">sed</a>
   </div>
 
   </div>
@@ -92,7 +113,7 @@ ga('send', 'pageview');
         
   
     <h1 class="article-title" itemprop="name">
-      深入理解Java String#intern() 内存模型
+      sed快速入门
     </h1>
   
 
@@ -100,44 +121,47 @@ ga('send', 'pageview');
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
-<a id="more"></a>
-<p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
-<p>#测试程序</p>
-<pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStringPoolWithLongString</span><span class="params">()</span></span>{
-        <span class="keyword">long</span> i=<span class="number">0</span>;
-        <span class="keyword">while</span>(<span class="literal">true</span>){
-            String longString = <span class="string">"This is a very long string, very very long string to test the gc behavior of the string constant pool"</span>+i;
-            longString.intern();
-            i++;
-        }
-    }
-
-    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{
-        StringPoolTest stringPoolTest = <span class="keyword">new</span> StringPoolTest();
-        stringPoolTest.testStringPoolWithLongString();
-    }
-}
-</code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
-<p>#Java 6<br>我们使用版本Jdk1.6.0_29来跑该程序，打开Java VisualVM监控，可以看到，Perm区不断发生GC，由此的出结论，虽然字符串常量池放在Perm空间，但当Perm空间接近满的时候，JVM会将字符串常量池中的无用字符串回收掉。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png"></p>
-<p>#Java 7<br>下面，我们切换到Jdk1.7.0_67重跑该程序，可以看到Perm区内存分配曲线很平滑，没有出现内存分配的现象。</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png"></p>
-<p>但在Heap空间，新的对象不断产生，然后不断触发GC</p>
-<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-heap.png"></p>
-<p>#结论<br>由于Perm区大小是有限的，通常只有几十MB，所以不推荐在Java6下广泛使用String.intern()，这篇文章<a href="http://java-performance.info/string-intern-in-java-6-7-8/" title="string-intern-in-java-6-7-8" target="_blank" rel="external">string-intern-in-java-6-7-8</a>的性能测试表明，在Java6底下大量使用intern()会导致应用性能的显著下降，还有可能产生OOM错误。但从Java7开始，字符串常量池被移到了Heap空间，Heap空间的大小只受制于机器的真实内存大小，因此，在Java7下使用String.intern()能更有效地减少重复String对象对内存的占用。</p>
+        <p>sed与awk堪称文本流处理神器，本文提供了sed命令的快速入门参考：</p>
+<h1 id="删除命令">删除命令</h1><h3 id="删除第N行">删除第N行</h3><pre><code>sed <span class="number">3</span>d abc.txt
+</code></pre><p>该命令会删除第三行数据</p>
+<h3 id="隔行删除">隔行删除</h3><pre><code>sed <span class="string">'1~2d'</span> abc<span class="class">.txt</span>
+sed <span class="string">'2~2d'</span> abc.txt
+</code></pre><p>第一个命令会删除奇数行数据，第二个命令会删除偶数行数据。</p>
+<h3 id="删除从N行开始到M行的数据">删除从N行开始到M行的数据</h3><pre><code><span class="title">sed</span> <span class="string">'5,11d'</span> abc.txt
+</code></pre><p>删除第五行到第十一行的数据。</p>
+<h3 id="删除最后一行数据">删除最后一行数据</h3><pre><code><span class="title">sed</span> <span class="string">'<span class="variable">$d</span>'</span> abc.txt
+</code></pre><h3 id="删除符合条件的行">删除符合条件的行</h3><pre><code>sed <span class="regexp">/unix/</span>d abc.txt
+</code></pre><p>该命令会删除所有包含<strong>unix</strong>关键字的行</p>
+<h3 id="删除符合条件的行以及紧跟着的N行">删除符合条件的行以及紧跟着的N行</h3><pre><code><span class="title">sed</span> <span class="string">'/unix/,+3d'</span> abc.txt
+</code></pre><p>该命令会删除包含<strong>unix</strong>关键字的行以及该行往下3行</p>
+<h3 id="删除符合条件的行到最后的行">删除符合条件的行到最后的行</h3><pre><code><span class="title">sed</span> <span class="string">'/unix/,<span class="variable">$d</span>'</span> abc.txt
+</code></pre><p>该命令会删除包含<strong>unix</strong>关键字的行以及该行往下到文件结尾的所有行</p>
+<h3 id="删除所有空行">删除所有空行</h3><pre><code><span class="title">sed</span> <span class="string">'/^$/d'</span> abc.txt
+</code></pre><p>该命令会删除abc.txt所有空白行</p>
+<h3 id="删除所有注释行">删除所有注释行</h3><p>我们这里假设通过符号<strong>#</strong>来进行注释</p>
+<pre><code><span class="title">sed</span> <span class="string">'/#.*/d'</span> abc.txt
+</code></pre><p>该命令会删除所有注释行</p>
+<h1 id="替换命令">替换命令</h1><p><strong>s</strong> 代表替换符, <strong>/</strong> 是定界符</p>
+<h3 id="单个替换">单个替换</h3><pre><code>sed <span class="attribute">'s</span>/old/<span class="keyword">new</span>/'
+</code></pre><p>该命令会将第一个’old’替换成’new’</p>
+<h3 id="全局替换">全局替换</h3><pre><code>sed <span class="symbol">'s</span>/old/<span class="keyword">new</span>/g'
+</code></pre><p>该命令会将所有’old’替换成’new’</p>
+<h3 id="对管道的数据流进行替换">对管道的数据流进行替换</h3><pre><code><span class="built_in">echo</span> <span class="string">"old"</span> | sed <span class="string">'s/old/new/'</span>
+</code></pre><p>该命令会输出new</p>
+<h3 id="对文件的数据流进行替换">对文件的数据流进行替换</h3><pre><code>sed <span class="attribute">'s</span>/old/<span class="keyword">new</span>/' filename
+</code></pre><p>该命令会将old替换成new并在console中打印出来</p>
+<h3 id="对文件的数据流进行替换并保存">对文件的数据流进行替换并保存</h3><pre><code>sed -<span class="tag">i</span> <span class="string">'s/old/new/'</span> filename
+</code></pre><p>通过 <strong>-i</strong> 选项替换old并保存到当前文件。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz0qa0j000jqk50nedvd3qt" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2014/01/23/sed-command-quick-reference/" data-id="cimz0qa11000tqk50wubqkuq0" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2015/01/20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2014/01/23/sed-command-quick-reference/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sed/">sed</a></li></ul>
 
     </footer>
   </div>
@@ -145,20 +169,15 @@ ga('send', 'pageview');
     
 <nav id="article-nav">
   
-    <a href="/2015/03/10/java-octal-int/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/01/13/jboss-as7-module/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Java 中以0开头的int变量的真实值
+          Jboss AS7 模块介绍
         
       </div>
     </a>
   
-  
-    <a href="/2015/01/15/class-loading-in-as7/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Jboss AS7 类加载机制</div>
-    </a>
   
 </nav>
 
@@ -235,7 +254,7 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'codelog-me';
   
-  var disqus_url = 'http://codelog.me/2015/01/20/string-intern/';
+  var disqus_url = 'http://codelog.me/2014/01/23/sed-command-quick-reference/';
   
   (function(){
     var dsq = document.createElement('script');
