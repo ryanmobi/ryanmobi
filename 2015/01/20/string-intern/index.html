@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png">
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png">
 <meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-heap.png">
-<meta property="og:updated_time" content="2016-04-13T15:44:26.000Z">
+<meta property="og:updated_time" content="2016-04-14T13:54:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java String.intern() 内存模型">
 <meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
@@ -84,7 +84,7 @@ ga('send', 'pageview');
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Development/">Development</a>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
   </div>
 
   </div>
@@ -135,7 +135,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cimz12ktw000jxx505pkix5w9" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2015/01/20/string-intern/" data-id="cin0cfxr6000niw50p16g21tj" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2015/01/20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -185,7 +185,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Development/">Development</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux-Unix/">Linux Unix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -194,7 +194,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -203,7 +203,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 15px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/sed/" style="font-size: 10px;">sed</a>
+      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 13.33px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
     </div>
   </div>
 
@@ -212,7 +212,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
