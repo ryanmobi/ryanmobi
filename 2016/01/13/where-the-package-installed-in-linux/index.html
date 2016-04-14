@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Code Log">
 <meta property="og:description" content="大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，究竟软件包的文件被保存到在里？
 其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所">
-<meta property="og:updated_time" content="2016-04-13T15:46:07.000Z">
+<meta property="og:updated_time" content="2016-04-14T14:58:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="deb包安装目录详解">
 <meta name="twitter:description" content="大家都知道在Windows系统下安装一个软件，一般情况下该软件包的绝大部分文件都保存在安装目录里，但刚开始在Linux上安装了一个软件包，往往心中会有一个疑问，究竟软件包的文件被保存到在里？
@@ -104,6 +104,7 @@ ga('send', 'pageview');
 <p>其实在Linux里安装软件包，系统会将软件包里不同类型的文件拷贝到不同的目录。如果你是用Debian系列的Linux系统，可以通过以下命令找出一个软件包不同类型文件所在的目录，举个例子，要查看nodejs的所有文件的分布情况：</p>
 <pre><code><span class="preprocessor"># dpkg -L nodejs</span>
 </code></pre><p>输出如下：</p>
+<a id="more"></a>
 <pre><code>/.
 /usr
 <span class="regexp">/usr/</span>share
@@ -118,8 +119,7 @@ ga('send', 'pageview');
 <span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>events.markdown
 <span class="regexp">/usr/</span>share<span class="regexp">/doc/</span>nodejs<span class="regexp">/api/</span>punycode.markdown
 ...略
-</code></pre><a id="more"></a>
-<p>可以看到nodejs的文件大致可以分为以下几大类：</p>
+</code></pre><p>可以看到nodejs的文件大致可以分为以下几大类：</p>
 <ol>
 <li><p>/usr/share/doc/nodejs/<br>保存nodejs相关的文档</p>
 </li>
@@ -134,7 +134,7 @@ ga('send', 'pageview');
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/" data-id="cin0cfxqr000aiw50f2acbxfu" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/" data-id="cin0ewcyf000avz50wwmegibh" class="article-share-link">Share</a>
       
         <a href="http://codelog.me/2016/01/13/where-the-package-installed-in-linux/#disqus_thread" class="article-comment-link">Comments</a>
       
