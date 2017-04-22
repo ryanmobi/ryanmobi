@@ -198,7 +198,7 @@ body {
   margin-bottom: 1em;
   margin-left: 5px;
   line-height: 1em;
-  text-shadow: 0 1px #fff;
+  text-shadow: 0 0px #fff;
   font-weight: bold;
 }
 .archive-article-inner {
@@ -521,7 +521,6 @@ body {
   background: #fff;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
 }
 .article-inner {
   overflow: hidden;
@@ -569,7 +568,7 @@ body {
   transition: color 0.2s;
 }
 a.article-title:hover {
-  color: #258fb8;
+  color: #0eb5f2;
 }
 .article-entry {
   color: #555;
@@ -606,7 +605,7 @@ a.article-title:hover {
   margin: 1.1em 0;
 }
 .article-entry a {
-  color: #258fb8;
+  color: #0eb5f2;
   text-decoration: none;
 }
 .article-entry a:hover {
@@ -698,18 +697,18 @@ a.article-title:hover {
 .article-more-link a {
   display: inline-block;
   line-height: 1em;
-  padding: 6px 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
+  padding: 10px 22px;
+  -webkit-border-radius: 18px;
+  border-radius: 18px;
   background: #5cb8e7;
   color: #fff;
   text-decoration: none;
 }
 .article-more-link a:hover {
-  background: #258fb8;
+  background: #0eb5f2;
   color: #fff;
   text-decoration: none;
-  text-shadow: 0 1px #1e7293;
+  text-shadow: 0 1px #0a91c2;
 }
 .article-footer {
   font-size: 0.85em;
@@ -967,8 +966,8 @@ a.article-title:hover {
 }
 #comments {
   background: #fff;
-  -webkit-box-shadow: 1px 2px 3px #ddd;
-  box-shadow: 1px 2px 3px #ddd;
+  -webkit-box-shadow: 0px 0px 0px #ddd;
+  box-shadow: 0px 0px 0px #ddd;
   padding: 20px;
   border: 1px solid #ddd;
   -webkit-border-radius: 3px;
@@ -976,7 +975,7 @@ a.article-title:hover {
   margin: 24px 0;
 }
 #comments a {
-  color: #258fb8;
+  color: #0eb5f2;
 }
 .archives-wrap {
   margin: 24px 0;
@@ -1032,7 +1031,7 @@ a.article-title:hover {
   line-height: 1.6em;
 }
 .archive-article-title:hover {
-  color: #258fb8;
+  color: #0eb5f2;
 }
 .archive-article-footer {
   margin-top: 1em;
@@ -1048,8 +1047,6 @@ a.article-title:hover {
 #page-nav {
   margin: 24px auto;
   background: #fff;
-  -webkit-box-shadow: 1px 2px 3px #ddd;
-  box-shadow: 1px 2px 3px #ddd;
   border: 1px solid #ddd;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -1107,7 +1104,7 @@ a.article-title:hover {
   color: #999;
 }
 #footer a {
-  color: #258fb8;
+  color: #0eb5f2;
   text-decoration: none;
 }
 #footer a:hover {
@@ -1225,7 +1222,7 @@ a.article-title:hover {
   margin-left: 20px;
 }
 .article-entry .gist .gist-file .gist-meta a {
-  color: #258fb8;
+  color: #0eb5f2;
   font-weight: normal;
 }
 .article-entry .gist .gist-file .gist-meta a:hover {
@@ -1331,7 +1328,7 @@ pre .javascript .function {
   border-radius: 3px;
 }
 .widget a {
-  color: #258fb8;
+  color: #0eb5f2;
   text-decoration: none;
 }
 .widget a:hover {
