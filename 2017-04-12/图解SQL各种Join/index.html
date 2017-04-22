@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>图说SQL Join | Code Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如果你也曾经被SQL语言中各种Join操作：Left Join, Right Join, Inner Join等搞晕了头，那么这篇文章比较适合你。本文通过维恩图演示各种Join语句的执行效果，简单直白容易记忆。原文见
+假如有两张表 Table A 和 Table B, 表数据如下:Table A:
+
+
+
+id
+name
+
+
+
+
+1
+Pirate
+
+
+2
+Monkey
+
+
+3
+Ninja
+
+
+4
+S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图说SQL Join">
+<meta property="og:url" content="http://codelog.me/2017-04-12/图解SQL各种Join/index.html">
+<meta property="og:site_name" content="Code Log">
+<meta property="og:description" content="如果你也曾经被SQL语言中各种Join操作：Left Join, Right Join, Inner Join等搞晕了头，那么这篇文章比较适合你。本文通过维恩图演示各种Join语句的执行效果，简单直白容易记忆。原文见
+假如有两张表 Table A 和 Table B, 表数据如下:Table A:
+
+
+
+id
+name
+
+
+
+
+1
+Pirate
+
+
+2
+Monkey
+
+
+3
+Ninja
+
+
+4
+S">
+<meta property="og:image" content="http://codelog.me/img/2017-04/inner-join.png">
+<meta property="og:image" content="http://codelog.me/img/2017-04/outer-join-1.png">
+<meta property="og:image" content="http://codelog.me/img/2017-04/outer-join-2.png">
+<meta property="og:image" content="http://codelog.me/img/2017-04/left-join-1.png">
+<meta property="og:image" content="http://codelog.me/img/2017-04/left-join-2.png">
+<meta property="og:updated_time" content="2017-04-13T16:04:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图说SQL Join">
+<meta name="twitter:description" content="如果你也曾经被SQL语言中各种Join操作：Left Join, Right Join, Inner Join等搞晕了头，那么这篇文章比较适合你。本文通过维恩图演示各种Join语句的执行效果，简单直白容易记忆。原文见
+假如有两张表 Table A 和 Table B, 表数据如下:Table A:
+
+
+
+id
+name
+
+
+
+
+1
+Pirate
+
+
+2
+Monkey
+
+
+3
+Ninja
+
+
+4
+S">
+  
+    <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico?v2">
+  
+  <link rel="stylesheet" href="/css/googlefont.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46095293-2', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-inner" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CodeLog</a>
+      </h1>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://codelog.me"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">文章归档</a>
+        
+          <a class="main-nav-link" href="/book">阅读清单</a>
+        
+          <a class="main-nav-link" href="/about">关于作者</a>
+        
+      </nav>
+      
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-图解SQL各种Join" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017-04-12/图解SQL各种Join/" class="article-date">
+  <time datetime="2017-04-12T15:15:36.000Z" itemprop="datePublished">2017-04-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SQL/">SQL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      图说SQL Join
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果你也曾经被SQL语言中各种Join操作：Left Join, Right Join, Inner Join等搞晕了头，那么这篇文章比较适合你。本文通过维恩图演示各种Join语句的执行效果，简单直白容易记忆。<a href="https://blog.codinghorror.com/a-visual-explanation-of-sql-joins/" target="_blank" rel="external">原文见</a></p>
+<p>假如有两张表 <strong>Table A</strong> 和 <strong>Table B</strong>, 表数据如下:<br>Table A:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+</tr>
+</tbody>
+</table>
+<p>Table B:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Darth Vader</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+</tbody>
+</table>
+<p>下面我们来看看各种Join的执行效果</p>
+<a id="more"></a>
+<h2 id="1-_INNER_JOIN">1. INNER JOIN</h2><p>Inner Join会根据Join的On条件拿左表（Table A）的行与右表(Table B)的行进行匹配, 只有当左右表中 <strong>至少同时</strong> 存在一条匹配数据时才返回到结果集. 也就是说Inner Join求的是两个表之间的交集.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">SELECT * <span class="keyword">FROM</span> TableA</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> TableB</span><br><span class="line"><span class="keyword">ON</span> TableA.<span class="keyword">name</span> = TableB.<span class="keyword">name</span></span></span><br></pre></td></tr></table></figure>
+<p>结果集:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+</tbody>
+</table>
+<p><img width="400" height="400" src="/img/2017-04/inner-join.png"></p>
+<h2 id="2-_Full_JOIN">2. Full JOIN</h2><p>在某些数据库中, FULL JOIN被称之为FULL OUTER JOIN (<strong>注意: MySQL不支持带ON条件的FULL JOIN, 也不支持FULL OUTER JOIN关键字</strong>).  FULL OUTER JOIN关键字会从左表(Table A)和右表(Table B)中返回所有符合条件的行, 如果Table A中的行在Table B中没有匹配或者Table B中的行在Table A中没有匹配, 则相关列返回NULL.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">SELECT * <span class="keyword">FROM</span> TableA</span><br><span class="line"><span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB</span><br><span class="line"><span class="keyword">ON</span> TableA.<span class="keyword">name</span> = TableB.<span class="keyword">name</span></span></span><br></pre></td></tr></table></figure>
+<p>结果集:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>null</td>
+<td>null</td>
+<td>3</td>
+<td>Darth Vader</td>
+</tr>
+</tbody>
+</table>
+<p><img width="400" height="400" src="/img/2017-04/outer-join-1.png"></p>
+<p>另外一个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">SELECT * <span class="keyword">FROM</span> TableA</span><br><span class="line"><span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB</span><br><span class="line"><span class="keyword">ON</span> TableA.<span class="keyword">name</span> = TableB.<span class="keyword">name</span></span><br><span class="line"><span class="keyword">WHERE</span> TableA.<span class="keyword">id</span> <span class="keyword">IS</span> <span class="literal">null</span></span><br><span class="line"><span class="keyword">OR</span> TableB.<span class="keyword">id</span> <span class="keyword">IS</span> <span class="literal">null</span></span></span><br></pre></td></tr></table></figure>
+<p>结果集:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>null</td>
+<td>null</td>
+<td>1</td>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>null</td>
+<td>null</td>
+<td>3</td>
+<td>Darth Vader</td>
+</tr>
+</tbody>
+</table>
+<p><img width="400" height="400" src="/img/2017-04/outer-join-2.png"></p>
+<h2 id="3-_LEFT_JOIN">3. LEFT JOIN</h2><p>LEFT JOIN在某些数据库中称之为LEFT OUTER JOIN. 该关键字会从左表中返回所有符合条件的行, 并且如果右表有匹配的行则一并返回, 如果右表中没找到匹配的行, 则与右表相关的结果列返回NULL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">SELECT * <span class="keyword">FROM</span> TableA</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB</span><br><span class="line"><span class="keyword">ON</span> TableA.<span class="keyword">name</span> = TableB.<span class="keyword">name</span></span></span><br></pre></td></tr></table></figure>
+<p>结果集:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>null</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+<p><img width="400" height="400" src="/img/2017-04/left-join-1.png"></p>
+<p>另外一个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">SELECT * <span class="keyword">FROM</span> TableA</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB</span><br><span class="line"><span class="keyword">ON</span> TableA.<span class="keyword">name</span> = TableB.<span class="keyword">name</span></span><br><span class="line"><span class="keyword">WHERE</span> TableB.<span class="keyword">id</span> <span class="keyword">IS</span> <span class="literal">null</span></span></span><br></pre></td></tr></table></figure>
+<p>结果集：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>null</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+<p><img width="400" height="400" src="/img/2017-04/left-join-2.png"></p>
+<h2 id="4-_RIGHT_JOIN">4. RIGHT JOIN</h2><p>RIGHT JOIN在某些数据库中称之为RIGHT OUTER JOIN, 与LEFT JOIN相反, 该关键字返回右表中所有符合条件的行, 并且如果左表有匹配的行则一并返回, 如果左表没找到匹配的行, 则与左表相关的结果列返回NULL。</p>
+<p>由于RIGHT JOIN的原理与LEFT JOIN大致相同， 这里就不再赘述。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://codelog.me/2017-04-12/图解SQL各种Join/" data-id="cj1spbza700005h50tetpe3om" class="article-share-link">Share</a>
+      
+        <a href="http://codelog.me/2017-04-12/图解SQL各种Join/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL-数据库/">SQL, 数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016-04-14/online-issue-analysis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">记一次线上故障分析过程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-数据库/">SQL, 数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 13.33px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/SQL-数据库/" style="font-size: 10px;">SQL, 数据库</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Ryan L<br>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">文章归档</a>
+  
+    <a href="/book" class="mobile-nav-link">阅读清单</a>
+  
+    <a href="/about" class="mobile-nav-link">关于作者</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'codelog-me';
+  
+  var disqus_url = 'http://codelog.me/2017-04-12/图解SQL各种Join/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

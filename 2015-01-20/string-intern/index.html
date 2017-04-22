@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入理解Java String.intern() 内存模型 | Code Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Java String.intern() 内存模型">
+<meta property="og:url" content="http://codelog.me/2015-01-20/string-intern/index.html">
+<meta property="og:site_name" content="Code Log">
+<meta property="og:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
+<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png">
+<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png">
+<meta property="og:image" content="http://codelog.me/img/2015-01-20-string-intern/string-intern-jdk7-heap.png">
+<meta property="og:updated_time" content="2016-04-14T14:59:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解Java String.intern() 内存模型">
+<meta name="twitter:description" content="大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。
+字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试">
+  
+    <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico?v2">
+  
+  <link rel="stylesheet" href="/css/googlefont.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46095293-2', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-inner" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CodeLog</a>
+      </h1>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://codelog.me"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">文章归档</a>
+        
+          <a class="main-nav-link" href="/book">阅读清单</a>
+        
+          <a class="main-nav-link" href="/about">关于作者</a>
+        
+      </nav>
+      
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-string-intern" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015-01-20/string-intern/" class="article-date">
+  <time datetime="2015-01-20T06:05:51.000Z" itemprop="datePublished">2015-01-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入理解Java String.intern() 内存模型
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>大家知道，Java中string.intern()方法调用会先去字符串常量池中查找相应的字符串，如果字符串不存在，就会在字符串常量池中创建该字符串然后再返回。</p>
+<p>字符串常量池是一个固定大小的HashMap，桶的数量默认是1009, 从Java7u40开始，该默认值增大到60013。在Java6当中，字符串常量池是放在Perm空间的，从Java7开始，字符串常量池被移到Heap空间。下面，我们通过测试程序来窥探字符串常量池在Java6，Java7两个不同版本底下的内存分配情况。</p>
+<a id="more"></a>
+<p>#测试程序</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">class</span> StringPoolTest {
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStringPoolWithLongString</span><span class="params">()</span></span>{
+        <span class="keyword">long</span> i=<span class="number">0</span>;
+        <span class="keyword">while</span>(<span class="literal">true</span>){
+            String longString = <span class="string">"This is a very long string, very very long string to test the gc behavior of the string constant pool"</span>+i;
+            longString.intern();
+            i++;
+        }
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{
+        StringPoolTest stringPoolTest = <span class="keyword">new</span> StringPoolTest();
+        stringPoolTest.testStringPoolWithLongString();
+    }
+}
+</code></pre><p>测试程序很简单，一个死循环，循环里面通过递增变量i制造唯一的字符串，然后用main函数启动程序。</p>
+<p>#Java 6<br>我们使用版本Jdk1.6.0_29来跑该程序，打开Java VisualVM监控，可以看到，Perm区不断发生GC，由此的出结论，虽然字符串常量池放在Perm空间，但当Perm空间接近满的时候，JVM会将字符串常量池中的无用字符串回收掉。</p>
+<p><img src="/img/2015-01-20-string-intern/string-intern-jdk6-permgen.png"></p>
+<p>#Java 7<br>下面，我们切换到Jdk1.7.0_67重跑该程序，可以看到Perm区内存分配曲线很平滑，没有出现内存分配的现象。</p>
+<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-permgen.png"></p>
+<p>但在Heap空间，新的对象不断产生，然后不断触发GC</p>
+<p><img src="/img/2015-01-20-string-intern/string-intern-jdk7-heap.png"></p>
+<p>#结论<br>由于Perm区大小是有限的，通常只有几十MB，所以不推荐在Java6下广泛使用String.intern()，这篇文章<a href="http://java-performance.info/string-intern-in-java-6-7-8/" title="string-intern-in-java-6-7-8" target="_blank" rel="external">string-intern-in-java-6-7-8</a>的性能测试表明，在Java6底下大量使用intern()会导致应用性能的显著下降，还有可能产生OOM错误。但从Java7开始，字符串常量池被移到了Heap空间，Heap空间的大小只受制于机器的真实内存大小，因此，在Java7下使用String.intern()能更有效地减少重复String对象对内存的占用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://codelog.me/2015-01-20/string-intern/" data-id="cj1spbzb3000y5h503ml7lmqj" class="article-share-link">Share</a>
+      
+        <a href="http://codelog.me/2015-01-20/string-intern/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015-03-10/java-octal-int/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Java 中以0开头的int变量的真实值
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015-01-15/class-loading-in-as7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Jboss AS7 类加载机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-数据库/">SQL, 数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 13.33px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/SQL-数据库/" style="font-size: 10px;">SQL, 数据库</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Ryan L<br>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">文章归档</a>
+  
+    <a href="/book" class="mobile-nav-link">阅读清单</a>
+  
+    <a href="/about" class="mobile-nav-link">关于作者</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'codelog-me';
+  
+  var disqus_url = 'http://codelog.me/2015-01-20/string-intern/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

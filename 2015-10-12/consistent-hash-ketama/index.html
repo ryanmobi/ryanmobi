@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一致性哈希算法之Ketama算法 | Code Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="有关一致性哈希算法原理及其应用讨论的文章已经足够多，如果对一致性哈希算法一点概念都没有的同学可以先参考这篇文章：一致性哈希。
+相对来说，一致性哈希算法的原理还是比较容易理解的，但在日常开发过程中发现虽然大部分同事对一致性哈希算法的原理有个大概的认识，然而能知道该算法具体实现的人却寥寥无几。当然一致性哈希算法的实现不同语言有不同的实现方式，其中较为有名的一种实现叫Ketama算法，该算法最初是由La">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一致性哈希算法之Ketama算法">
+<meta property="og:url" content="http://codelog.me/2015-10-12/consistent-hash-ketama/index.html">
+<meta property="og:site_name" content="Code Log">
+<meta property="og:description" content="有关一致性哈希算法原理及其应用讨论的文章已经足够多，如果对一致性哈希算法一点概念都没有的同学可以先参考这篇文章：一致性哈希。
+相对来说，一致性哈希算法的原理还是比较容易理解的，但在日常开发过程中发现虽然大部分同事对一致性哈希算法的原理有个大概的认识，然而能知道该算法具体实现的人却寥寥无几。当然一致性哈希算法的实现不同语言有不同的实现方式，其中较为有名的一种实现叫Ketama算法，该算法最初是由La">
+<meta property="og:updated_time" content="2016-04-14T13:53:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一致性哈希算法之Ketama算法">
+<meta name="twitter:description" content="有关一致性哈希算法原理及其应用讨论的文章已经足够多，如果对一致性哈希算法一点概念都没有的同学可以先参考这篇文章：一致性哈希。
+相对来说，一致性哈希算法的原理还是比较容易理解的，但在日常开发过程中发现虽然大部分同事对一致性哈希算法的原理有个大概的认识，然而能知道该算法具体实现的人却寥寥无几。当然一致性哈希算法的实现不同语言有不同的实现方式，其中较为有名的一种实现叫Ketama算法，该算法最初是由La">
+  
+    <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico?v2">
+  
+  <link rel="stylesheet" href="/css/googlefont.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46095293-2', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-inner" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CodeLog</a>
+      </h1>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://codelog.me"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">文章归档</a>
+        
+          <a class="main-nav-link" href="/book">阅读清单</a>
+        
+          <a class="main-nav-link" href="/about">关于作者</a>
+        
+      </nav>
+      
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-consistent-hash-ketama" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015-10-12/consistent-hash-ketama/" class="article-date">
+  <time datetime="2015-10-12T15:38:54.000Z" itemprop="datePublished">2015-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/algorithm/">algorithm</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一致性哈希算法之Ketama算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>有关一致性哈希算法原理及其应用讨论的文章已经足够多，如果对一致性哈希算法一点概念都没有的同学可以先参考这篇文章：<a href="http://blog.codinglabs.org/articles/consistent-hashing.html" title="一致性哈希" target="_blank" rel="external">一致性哈希</a>。</p>
+<p>相对来说，一致性哈希算法的原理还是比较容易理解的，但在日常开发过程中发现虽然大部分同事对一致性哈希算法的原理有个大概的认识，然而能知道该算法具体实现的人却寥寥无几。当然一致性哈希算法的实现不同语言有不同的实现方式，其中较为有名的一种实现叫Ketama算法，该算法最初是由<a href="http://www.last.fm/" title="last.fm" target="_blank" rel="external">Last.fm</a>的程序员实现的并得到了广泛的应用，一些开源框架譬如spymemcached，twemproxy等都内置了该算法的实现。</p>
+<p>本文主要从spymemcached的源码出发，分析Ketama算法的具体实现。</p>
+<a id="more"></a>
+<p>在类KetamaNodeLocator.java里有个setKetamaNodes（）方法负责一致性哈希环的初始化工作， 代码如下：</p>
+<pre><code><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setKetamaNodes</span><span class="params">(List&lt;MemcachedNode&gt; nodes)</span> </span>{
+    TreeMap&lt;Long, MemcachedNode&gt; newNodeMap = <span class="keyword">new</span> TreeMap&lt;Long, MemcachedNode&gt;();
+    <span class="keyword">int</span> numReps = config.getNodeRepetitions();
+
+    <span class="keyword">for</span> (MemcachedNode node : nodes) {
+      <span class="comment">// Ketama does some special work with md5 where it reuses chunks.</span>
+      <span class="keyword">if</span> (hashAlg == DefaultHashAlgorithm.KETAMA_HASH) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numReps / <span class="number">4</span>; i++) {
+          byte[] digest = DefaultHashAlgorithm.computeMd5(config.getKeyForNode(node, i));
+          <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) {
+            Long k = ((<span class="keyword">long</span>) (digest[<span class="number">3</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)
+                    | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)
+                    | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>)
+                    | (digest[h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>);
+
+            newNodeMap.put(k, node);
+            getLogger().debug(<span class="string">"Adding node %s in position %d"</span>, node, k);
+          }
+        }
+      } <span class="keyword">else</span> {
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numReps; i++) {
+          newNodeMap.put(hashAlg.hash(config.getKeyForNode(node, i)), node);
+        }
+      }
+    }
+    assert newNodeMap.size() == numReps * nodes.size();
+    ketamaNodes = newNodeMap;
+}
+</code></pre><p>下面我们来具体分析下setKetamaNodes函数的实现，首先MemcachedNode这个类对Memcached节点的网络连接参数及方法进行了封装。TreeMap在这里用于模拟一致性哈希环的环状结构。</p>
+<pre><code><span class="built_in">int</span> numReps = config.getNodeRepetitions<span class="literal">()</span>;
+</code></pre><p><strong>getNodeRepetitions()</strong>方法负责读取配置信息，返回一个真实的Memcached节点对应的虚拟节点数，默认情况下返回160，也就是说一个Memcached节点在一致性哈希环上对应有160个虚拟节点。    </p>
+<pre><code>config.<span class="function"><span class="title">getKeyForNode</span><span class="params">(node, i)</span></span>
+</code></pre><p><strong>getKeyForNode()</strong>根据传进去的MemcacheNode对象和变量i生成key值，返回值示例：“127.0.0.1:11311-0”</p>
+<p><strong>computeMd5()</strong>根据key生成16位的MD5摘要， 因此digest数组共16位:</p>
+<pre><code>byte[] digest = DefaultHashAlgorithm.computeMd<span class="number">5</span><span class="comment">(config.getKeyForNode(node, i)</span>);
+</code></pre><p>将digest数组按每四位一组，通过位操作产生一个最大32位的长整数。之所以是32位是因为一致性哈希环取值范围为0～2^32; 回到上面的例子，对于一个Memcached节点譬如“127.0.0.1:11311”, 将通过for循环产生“127.0.0.1:11311-0”，“127.0.0.1:11311-1”… “127.0.0.1:11311-39”共40个副本，对于每个副本譬如“127.0.0.1:11311-0”, 将会产生4个长整数，对应一致性哈希环上的4个位置，所以默认配置的情况下，一个Memcached节点将在一致性哈希环上占据4×40=160个位置。</p>
+<pre><code>Long k = ((<span class="keyword">long</span>) (digest[<span class="number">3</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)
+        | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)
+        | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>)
+        | (digest[h * <span class="number">4</span>] &amp; <span class="number">0xFF</span>);
+</code></pre><p>以k为key将MemcacheNode对象放到TreeMap里：</p>
+<pre><code>newNodeMap.<span class="keyword">put</span>(k, node);
+</code></pre><p>由于TreeMap中的value是按Key排序的，因此可以通过TreeMap来模拟一致性哈希的环状结构，k值小的排在前，k值大的排在后。</p>
+<p>以上就是一致性哈希环初始化过程的的基本分析，下面我们来看看查询的过程， getPrimary()函数传入一个key，譬如”123”, 先计算出该key的哈希值。</p>
+<pre><code>public MemcachedNode getPrimary<span class="params">(final String k)</span> {
+    MemcachedNode rv = getNodeForKey<span class="params">(hashAlg.hash<span class="params">(k)</span>)</span>;
+    assert rv <span class="built_in">!</span>= null : <span class="string">"Found no node for key "</span> + k;
+    return rv;
+  }
+
+
+MemcachedNode getNodeForKey<span class="params">(long hash)</span> {
+    final MemcachedNode rv;
+    <span class="keyword">if</span> <span class="params">(!ketamaNodes.containsKey<span class="params">(hash)</span>)</span> {
+      <span class="comment">// Java 1.6 adds a ceilingKey method, but I'm still stuck in 1.5</span>
+      <span class="comment">// in a lot of places, so I'm doing this myself.</span>
+      SortedMap&lt;Long, MemcachedNode&gt; tailMap = getKetamaNodes<span class="params">()</span>.tailMap<span class="params">(hash)</span>;
+      <span class="keyword">if</span> <span class="params">(tailMap.isEmpty<span class="params">()</span>)</span> {
+        hash = getKetamaNodes<span class="params">()</span>.firstKey<span class="params">()</span>;
+      } <span class="keyword">else</span> {
+        hash = tailMap.firstKey<span class="params">()</span>;
+      }
+    }
+    rv = getKetamaNodes<span class="params">()</span>.get<span class="params">(hash)</span>;
+    return rv;
+}    
+</code></pre><p>重点在于下面这句, TreeMap的tailMap()方法会返回一个SortedMap对象tailMap, tailMap中包含的所有key值都比传参hash大，这个操作相当于给定一个hash值，从一致性哈希环中按顺时针顺序查找节点，直到查找到第一个key值比传参hash大的节点，该节点就是该hash值所对应的Memcached节点。</p>
+<pre><code>SortedMap&lt;Long, MemcachedNode&gt; tailMap = getKetamaNodes<span class="params">()</span>.tailMap<span class="params">(hash)</span>;
+</code></pre><p>以上就是对Sypmencached源码中Ketama算法的实现分析。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://codelog.me/2015-10-12/consistent-hash-ketama/" data-id="cj1spbzau000n5h508qd2dzi8" class="article-share-link">Share</a>
+      
+        <a href="http://codelog.me/2015-10-12/consistent-hash-ketama/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016-01-13/where-the-package-installed-in-linux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          deb包安装目录详解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015-09-13/about-hashcode/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hashCode()的实现细节</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-数据库/">SQL, 数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 13.33px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/SQL-数据库/" style="font-size: 10px;">SQL, 数据库</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Ryan L<br>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">文章归档</a>
+  
+    <a href="/book" class="mobile-nav-link">阅读清单</a>
+  
+    <a href="/about" class="mobile-nav-link">关于作者</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'codelog-me';
+  
+  var disqus_url = 'http://codelog.me/2015-10-12/consistent-hash-ketama/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

@@ -18,9 +18,9 @@
     <link rel="alternative" href="/atom.xml" title="Code Log" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.ico?v2">
   
-  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/googlefont.css" type="text/css">
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   
 <!-- Google Analytics -->
@@ -45,14 +45,9 @@ ga('send', 'pageview');
   <div id="banner"></div>
   <div id="header-outer" class="outer">
     <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">CodeLog</a>
+      </h1>
       <nav id="sub-nav">
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
@@ -62,9 +57,19 @@ ga('send', 'pageview');
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://codelog.me"></form>
       </div>
-    </div>
-    <div id="vertical">
-      <h1 id="drtitle" class="ng-binding">Code Log</h1>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">文章归档</a>
+        
+          <a class="main-nav-link" href="/book">阅读清单</a>
+        
+          <a class="main-nav-link" href="/about">关于作者</a>
+        
+      </nav>
+      
     </div>
   </div>
 </header>
@@ -74,7 +79,7 @@ ga('send', 'pageview');
   
     <article id="post-sed-command-quick-reference" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/01/23/sed-command-quick-reference/" class="article-date">
+    <a href="/2014-01-23/sed-command-quick-reference/" class="article-date">
   <time datetime="2014-01-23T15:53:51.000Z" itemprop="datePublished">2014-01-23</time>
 </a>
     
@@ -90,7 +95,7 @@ ga('send', 'pageview');
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/01/23/sed-command-quick-reference/">sed快速入门</a>
+      <a class="article-title" href="/2014-01-23/sed-command-quick-reference/">sed快速入门</a>
     </h1>
   
 
@@ -106,15 +111,15 @@ sed <span class="string">'2~2d'</span> abc.txt
 </code></pre><p>第一个命令会删除奇数行数据，第二个命令会删除偶数行数据。</p>
         
           <p class="article-more-link">
-            <a href="/2014/01/23/sed-command-quick-reference/#more">Read More</a>
+            <a href="/2014-01-23/sed-command-quick-reference/#more">阅读全文</a>
           </p>
         
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://codelog.me/2014/01/23/sed-command-quick-reference/" data-id="cj1hzzhfq0013do50esatbjlz" class="article-share-link">Share</a>
+      <a data-url="http://codelog.me/2014-01-23/sed-command-quick-reference/" data-id="cj1spbzbd00185h50kfvmm1fn" class="article-share-link">Share</a>
       
-        <a href="http://codelog.me/2014/01/23/sed-command-quick-reference/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://codelog.me/2014-01-23/sed-command-quick-reference/#disqus_thread" class="article-comment-link">Comments</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
@@ -133,14 +138,11 @@ sed <span class="string">'2~2d'</span> abc.txt
   
 </section>
         
-      </div>
-      <footer id="footer">
-  
-    <aside id="sidebar" class="outer">
+          <aside id="sidebar">
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sed/">sed</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -149,7 +151,7 @@ sed <span class="string">'2~2d'</span> abc.txt
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">标签</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jboss/">Jboss</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL-数据库/">SQL, 数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -158,7 +160,7 @@ sed <span class="string">'2~2d'</span> abc.txt
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
       <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Jboss/" style="font-size: 13.33px;">Jboss</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/SQL-数据库/" style="font-size: 10px;">SQL, 数据库</a> <a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a>
     </div>
@@ -167,7 +169,7 @@ sed <span class="string">'2~2d'</span> abc.txt
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -175,6 +177,9 @@ sed <span class="string">'2~2d'</span> abc.txt
 
   
 </aside>
+        
+      </div>
+      <footer id="footer">
   
   <div class="outer">
     <div id="footer-info" class="inner">
@@ -186,9 +191,13 @@ sed <span class="string">'2~2d'</span> abc.txt
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">首页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">文章归档</a>
+  
+    <a href="/book" class="mobile-nav-link">阅读清单</a>
+  
+    <a href="/about" class="mobile-nav-link">关于作者</a>
   
 </nav>
     
@@ -205,7 +214,7 @@ sed <span class="string">'2~2d'</span> abc.txt
 </script>
 
 
-<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
 
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
